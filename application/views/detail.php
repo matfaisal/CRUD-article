@@ -1,7 +1,14 @@
 <?php $this->load->view('partials/header.php'); ?>
 
+   <!-- mengecek cover apabila tidak diisikan -->
+   <?php
+      if (empty($blog['cover']))
+         $cover = base_url() . 'assets/img/post-bg.jpg';
+      else 
+         $cover = base_url() . 'uploads/' . $blog['cover'];
+   ?>
    <!-- Page Header -->
-   <header class="masthead" style="background-image: url('<?php echo base_url(); ?>assets/img/post-bg.jpg')">
+   <header class="masthead" style="background-image: url('<?php echo $cover; ?>')">
       <div class="overlay"></div>
       <div class="container">
          <div class="row">

@@ -1,29 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Document</title>
-</head>
-<body>
-   <h1>Edit Artikel</h1>
+<?php $this->load->view('partials/header.php'); ?>
 
-   <form method="POST">
-      <div>
-         <label>Title</label>
-         <input type="text" name="title" value="<?php echo $blog['title']; ?>">
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('<?php echo base_url(); ?>assets/img/home-bg.jpg')">
+      <div class="overlay"></div>
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+               <div class="site-heading">
+                  <h1>Edit Artikel</h1>
+               </div>
+            </div>
+         </div>
       </div>
-      <div>
-         <label>Url</label>
-         <input type="text" name="url" value="<?php echo $blog['url']; ?>">
+   </header>
+
+   <div class="container">
+      <div class="row">
+         <div class="col-md-8">
+            <form method="POST">
+               <div class="form-group">
+                  <label>Title</label>
+                  <input class="form-control" type="text" name="title" value="<?php echo $blog['title']; ?>">
+               </div>
+               <div class="form-group">
+                  <label>Url</label>
+                  <input class="form-control" type="text" name="url" value="<?php echo $blog['url']; ?>">
+               </div>
+               <div class="form-group">
+                  <label>Content</label>
+                  <textarea  class="form-control"name="content" cols="30" rows="10">
+                     <?php echo $blog['content']; ?>
+                  </textarea>
+               </div>
+               <button class="btn btn-primary" type="submit">Simpan Artikel</button>
+            </form>
+         </div>
       </div>
-      <div>
-         <label>Content</label>
-         <textarea name="content" cols="30" rows="10">
-            <?php echo $blog['content']; ?>
-         </textarea>
-      </div>
-      <button type="submit">Simpan Artikel</button>
-   </form>
-</body>
-</html>
+   </div>
+
+<?php $this->load->view('partials/footer.php'); ?>
