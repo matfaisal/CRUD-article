@@ -17,20 +17,23 @@
    <div class="container">
       <div class="row">
          <div class="col-md-8">
-            <form method="POST">
+            <!-- <form method="POST"> -->
+            <?php echo form_open_multipart(); ?>
                <div class="form-group">
                   <label>Title</label>
-                  <input class="form-control" type="text" name="title" value="<?php echo $blog['title']; ?>">
+                  <?php echo form_input('title', $blog['title'], 'class="form-control"' ) ?>
                </div>
                <div class="form-group">
                   <label>Url</label>
-                  <input class="form-control" type="text" name="url" value="<?php echo $blog['url']; ?>">
+                  <?php echo form_input('url', $blog['url'], 'class="form-control"') ?>
                </div>
                <div class="form-group">
                   <label>Content</label>
-                  <textarea  class="form-control"name="content" cols="30" rows="10">
-                     <?php echo $blog['content']; ?>
-                  </textarea>
+                  <?php echo form_textarea('content', $blog['content'], 'class="form-control"') ?>
+               </div>
+               <div class="form-group">
+                  <label>Cover</label>
+                  <?php echo form_upload('cover', $blog['cover'], 'class="form-control"') ?>
                </div>
                <button class="btn btn-primary" type="submit">Simpan Artikel</button>
             </form>

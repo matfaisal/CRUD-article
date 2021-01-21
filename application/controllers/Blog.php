@@ -72,6 +72,22 @@
             $post['url'] = $this->input->post('url');
             $post['content'] = $this->input->post('content');
 
+            $config['upload_path']          = './uploads/'; // folder digunakan untuk menyimpan folder upload
+            $config['allowed_types']        = 'gif|jpg|png';
+            $config['max_size']             = 1000;
+            $config['max_width']            = 2000;
+            $config['max_height']           = 1000;
+
+            $this->load->library('upload',$config );
+
+            // untuk mengecek apakah cover telah tersimpan
+            if (! $this->upload->do_upload('cover')) {
+               echo $this->upoload->display_errors();
+
+            } else {
+               $post['cover'] = $this->upload->data()['file_name'];
+            }
+
             $id = $this->Blog_model->updateBlog($id, $post);
             if ($id){
                echo "Artikel berhasil diedit";
