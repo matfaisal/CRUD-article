@@ -26,8 +26,12 @@
       // method untuk menambahkan data
       public function add() {
 
-         if ($this->input->post()) {
-            $this->input->post();
+         $this->form_validation->set_rules('title', 'Judul', 'required');
+         $this->form_validation->set_rules('url',  'URL', 'required');
+         $this->form_validation->set_rules('content', 'Kontent', 'required');
+
+         if ($this->form_validation->run() === TRUE) {
+
             $data['title'] = $this->input->post('title'); // $data['title'] = $_POST['title'];
             $data['content'] = $this->input->post('content'); // $data['content'] = $_POST['content'];
             $data['url'] = $this->input->post('url');
@@ -61,6 +65,7 @@
          $this->load->view('form_add');
       }
 
+
       // method untuk mengedit data
       public function edit($id) {
 
@@ -81,12 +86,11 @@
             $this->load->library('upload',$config );
 
             // untuk mengecek apakah cover telah tersimpan
-            if (! $this->upload->do_upload('cover')) {
-               echo $this->upoload->display_errors();
+            $this->upload->do_upload('cover');
+            if (!empty($this->upload->data('file_name')) ) {
+               $post['cover'] = $this->upload->data('file_name');
 
-            } else {
-               $post['cover'] = $this->upload->data()['file_name'];
-            }
+            } 
 
             $id = $this->Blog_model->updateBlog($id, $post);
             if ($id){
