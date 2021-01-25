@@ -1,13 +1,23 @@
 <?php
    class Blog_model extends CI_Model {
 
-      public function getBlogs(){
+      public function getBlogs($limit, $offset){
 
          $filter = $this->input->get('find'); // filtering search artikel
          $this->db->like('title', $filter); // like akan mencari title yang mirip
+         // paginaton
+         $this->db->limit($limit, $offset);
+         $this->db->order_by('date', 'desc');
+         return $this->db->get("blog");
 
          // $query = $this->db->query('SELECT * FROM blog');
-         return $this->db->get('blog');
+         // return $this->db->get('blog');
+      }
+
+      public function getTotalBlogs() {
+         $filter = $this->input->get('find');
+         $this->db->like('title', $filter);
+         return $this->db->count_all_results('blog');
       }
 
       public function getSingelBlog($field, $value){

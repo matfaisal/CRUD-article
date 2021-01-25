@@ -6,12 +6,25 @@
          $this->load->database();
          $this->load->helper('url');
          $this->load->model('Blog_model');
+         $this->load->library('session');
       }
 
-      public function index(){
+      public function index($offset = 0){
 
-         $query = $this->Blog_model->getBlogs();
+         // pagination start
+         $this->load->library('pagination'); //pertam jangan lupa load library pagination
+
+         $config['base_url'] = site_url('blog/index'); //halaman yang ingin ditambahkan pagination
+         $config['total_rows'] = $this->Blog_model->getTotalBlogs();  // untuk menghitung berapa banyak halaman yang akan dibagi
+         $config['per_page'] = 3; //
+         $this->pagination->initialize($config);
+
+         $query = $this->Blog_model->getBlogs($config['per_page'], $offset);
          $data['blogs'] = $query->result_array();
+
+         // end paginaton
+
+
          $this->load->view('blogs', $data);
       }
 
@@ -27,7 +40,7 @@
       public function add() {
 
          $this->form_validation->set_rules('title', 'Judul', 'required');
-         $this->form_validation->set_rules('url',  'URL', 'required');
+         $this->form_validation->set_rules('url',  'URL', 'required|alpha_dash');
          $this->form_validation->set_rules('content', 'Kontent', 'required');
 
          if ($this->form_validation->run() === TRUE) {
@@ -55,11 +68,16 @@
 
             $id = $this->Blog_model->insertBlog($data);
             if ($id){
-               echo "Artikel berhasil disimpan";
+               $this->session->set_flashdata('message', 
+               '<div class="alert alert-success"> Data barhasil disimpan</div>'
+               );
                redirect('/');
             } 
             else
-               echo "Artikel gagal disimpan";
+            $this->session->set_flashdata('message', 
+            '<div class="alert alert-warning"> Data gagal disimpan</div>'
+            );
+               redirect('/');
          }
          
          $this->load->view('form_add');
@@ -89,23 +107,61 @@
             $this->upload->do_upload('cover');
             if (!empty($this->upload->data('file_name')) ) {
                $post['cover'] = $this->upload->data('file_name');
-
             } 
 
             $id = $this->Blog_model->updateBlog($id, $post);
             if ($id){
-               echo "Artikel berhasil diedit";
+               $this->session->set_flashdata('message', '<div class="alert alert-success">Data berhasil di simpan</div>');
                redirect('/');
             }
             else
-               echo "Artikel gagal diedit";
+               $this->session->set_flashdata('message', '<div class="alert alert-success">Data gagal disimpan</div>');
          }
 
          $this->load->view('form_edit', $data);
       }
 
       public function delete($id){
-         $this->Blog_model->deleteBlog($id);
+
+         $result = $this->Blog_model->deleteBlog($id);
+
+         if ($result) {
+            $this->session->set_flashdata('message', '<div class="alert alert-success">Data berhasil dihapus</div>');
+         } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-warning">Data gagal dihapus</div>');
+         }
+         redirect('/');
+      }
+
+
+      // login dan logout
+      public function login(){
+
+
+         if ($this->input->post()) {
+            $username = $this->input->post('username');
+            $password = $this->input->post('password');
+   
+            if ($username == 'admin' && $password == 'admin') {
+   
+               $_SESSION['username'] = 'admin';
+               redirect('/');
+            }
+   
+            else 
+            {
+   
+               $this->session->set_flashdata('message', '<div class="alert alert-warning">Username/ Password tidak valid</div>');
+               redirect('blog/login');
+            }
+            
+         }
+         $this->load->view('login');
+      }
+
+      public function logout() {
+         $this->session->sess_destroy();
+         
          redirect('/');
       }
 

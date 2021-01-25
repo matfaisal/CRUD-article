@@ -19,6 +19,8 @@
    <div class="container">
       <div class="row">
          <div class="col-lg-8 col-md-10 mx-auto">
+         <!-- flash message -->
+         <?php echo $this->session->flashdata('message'); ?>
             <form>
                <input type="text" name="find">
                <button type="submit">Cari</button>
@@ -33,15 +35,18 @@
                      </h2>
                   </a>
                   <p class="post-mete">Posted on <?php echo $blog['date']; ?>
-                     <a class="btn btn-warning" href="<?php echo site_url('blog/edit/'. $blog['id']); ?>">Edit</a>
-                     <a class="btn btn-danger" href="<?php echo site_url('blog/delete/'. $blog['id']); ?>">Delete</a>
+
+                     <?php if(isset($_SESSION['username'])) : ?>
+                        <a class="btn btn-warning" href="<?php echo site_url('blog/edit/'. $blog['id']); ?>">Edit</a>
+                        <a class="btn btn-danger" href="<?php echo site_url('blog/delete/'. $blog['id']); ?>" onclick="return confirm('apakah anda yakin ingin menghapus ?')">Delete</a>
+                     <? endif; ?>
                   </p>
                   <p><?php echo $blog['content']; ?></p>
-                  
                </div>
-
                <hr>
-            <?php endforeach ?>
+            <?php endforeach; ?>
+            <?php echo $this->pagination->create_links(); ?>
+
             
             <!-- Pager -->
             <div class="clearfix">
